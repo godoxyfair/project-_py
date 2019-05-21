@@ -1,0 +1,240 @@
+from tkinter import *#импортирование графической библиотеки для создания интерфейса
+from PIL import ImageTk, Image#импортирование библтотеки для работы с изображениями
+import os#импортирование библиотеки для работы с Windows
+from tkinter import filedialog#импортирование библотеки для работы с файлами
+
+#создание окна программы
+class Main(Tk):
+    def __init__(self):
+        super().__init__()
+        self.geometry('1000x600')#размеры главного окна
+        self.title('Мэрия')#название главного окна
+        panelFrame = Frame(self, height=60, bg='pink')#расположние панели на главном окне
+        panelFrame.pack(side='top', fill='x')#вставка панели
+        textframe = Frame(self, height=920, width=600, bg='gray')#расположние подкладки на главном окне
+        textframe.pack(side='bottom', fill='both', expand=0)#вставка подкладки
+
+        #текстовый фрейм
+        poetry = "В качестве базы были взяты открытые данные мэрии Москвы\n за 2016 и часть 2017 года.\nЗагруженная таблица данных имеет большое количество столбцов,\n в том числе девять основных:\n" \
+                 "1.year – год отчета по письмам\n2.month – месяц отчета\n3.total_appeals – общее количество обращений за месяц\n4.appeals_to_mayor – обращения за месяц в адрес Мэра\n" \
+                 "5.res_positive – положительные решения за месяц\n6.res_negative – отклоненные письма\n7.res_explained – количество писем ,на которые был дан ответ\n" \
+                 "8.El_from_to_mayor – электронные письма Мэру\n9.Pap_from_to_mayor – обращения в письменной форме\n" \
+                 "Таким образом, всего в таблице столбцов 32, строк 20.\n Моя программа работает с файлом в формате CSV, где запятая/\nточка/двоеточие/точка с запятой – знак табуляции."
+        label2 = Label(text=poetry,font='Arial 13', justify=LEFT, bg='white')
+        label2.place(x=450, y=70)
+        #kвтавка логотипа сайта
+        self.img = ImageTk.PhotoImage(Image.open("mosru.jpg"))#обращениек картинке и ее загрузка
+        self.panel_1 = Label(self, image=self.img)
+        self.panel_1.place(x=500, y=400)#вставка картинки
+
+
+        #создание кнопок
+        graphbtn1 = Button(self, text='График кореляции приз.', font='Times 12',
+                          command = self.started_create)#вставка в главное окно,текс на кнопке, шрифт,команда нажатия
+        graphbtn1.place(x=50, y=90)#место расположения кнопки
+        graphbtn2 = Button(self, text = 'На 10тыс населения', font='Times 12',
+                            command = self.started_create1)
+        graphbtn2.place(x=50, y=200)
+        graphbtn3 = Button(self, text='На 10тыс всего населения', font='Times 12',
+                           command = self.started_create2)
+        graphbtn3.place(x=50, y=250)
+        graphbtn4 = Button(self, text='Попарная зависимость', font='Times 12',
+                           command = self.started_create3)
+        graphbtn4.place(x=50, y=350)
+
+        graphbtn5 = Button(self, text='Все столб. диаграммы', font='Times 12',
+                       command = self.started_create4)
+        graphbtn5.place(x=50, y=300)
+
+        graphbtn6 = Button(self, text='Ответы за весь период', font='Times 12',
+                           command = self.started_create5)
+        graphbtn6.place(x=50, y=140)
+
+        graphbtn7 = Button(self, text='Статистические характеристики', font='Times 12',
+                           command=self.started_create7)
+        graphbtn7.place(x=50, y=540)
+
+        openbtn1 = Button(self, text='Блокнот для заметок', font='Times 12',
+                           command = bookmark)
+        openbtn1.place(x=50, y=15)
+        openfile = Button(self, text='Скрипт построения с библиотеками seaborn и pandas', font='Times 12',
+                           command = idat)
+        openfile.place(x=50, y=395)
+
+        openxl = Button(self, text='Посмотреть данные в xls формате', font='Times 12',
+                      command = xler)
+        openxl.place(x=50, y=440)
+
+        graphbtn7 = Button(self, text='Общая кореляция', font='Times 12',
+                           command=self.started_create6)
+        graphbtn7.place(x=50, y=490)
+
+    #функции открытия графиков по нажатию кнопки
+    def started_create(self):
+        self.top_level = Top()
+
+    def started_create1(self):
+        self.top_level = Top1()
+
+    def started_create2(self):
+        self.top_level = Top2()
+
+    def started_create3(self):
+        self.top_level = Top3()
+
+    def started_create4(self):
+        self.top_level = Top4()
+
+    def started_create5(self):
+        self.top_level = Top5()
+
+    def started_create6(self):
+        self.top_level = Top6()
+
+    def started_create7(self):
+        self.top_level = Top7()
+
+
+#функции загрузки графиков на toplevel окна
+class Top(Toplevel):
+    def __init__(self):
+        super().__init__()
+        self.title('Кореляция')#название окна
+        self.geometry('1920x1080')#размеры окна
+        self.img = ImageTk.PhotoImage(Image.open("1.png"))#загрузка изображения в окно
+        self.panel = Label(self, image=self.img)
+        self.panel.pack(side="bottom", fill="both", expand="no")#расположение картинки
+#аналогично следующие
+
+class Top1(Toplevel):
+    def __init__(self):
+        super().__init__()
+        self.title('Письма на 10тыс населения')
+        self.geometry('1000x550')
+        self.img = ImageTk.PhotoImage(Image.open("2.png"))
+        self.panel = Label(self, image=self.img)
+        self.panel.pack(side="bottom", fill="both", expand="no")
+
+
+class Top2(Toplevel):
+    def __init__(self):
+        super().__init__()
+        self.title('Письма 10тыс всего населения')
+        self.geometry('1000x550')
+        self.img = ImageTk.PhotoImage(Image.open("3.png"))
+        self.panel = Label(self, image=self.img)
+        self.panel.pack(side="bottom", fill="both", expand="no")
+
+
+class Top3(Toplevel):
+    def __init__(self):
+        super().__init__()
+        self.title('Попарная зависимость первых 7 столбцов')
+        self.geometry('1200x950')
+        self.img = ImageTk.PhotoImage(Image.open("5.png"))
+        self.panel = Label(self, image=self.img)
+        self.panel.pack(side="bottom", fill="both", expand="no")
+
+
+class Top4(Toplevel):
+    def __init__(self):
+        super().__init__()
+        self.title('Диаграммы всех признаков')
+        self.geometry('1000x620')
+        self.img = ImageTk.PhotoImage(Image.open("4.png"))
+        self.panel = Label(self, image=self.img)
+        self.panel.pack(side="bottom", fill="both", expand="no")
+
+
+class Top5(Toplevel):
+    def __init__(self):
+        super().__init__()
+        self.title('Ответы населению за весь период')
+        self.geometry('1000x550')
+        self.img = ImageTk.PhotoImage(Image.open("Answer.png"))
+        self.panel = Label(self, image=self.img)
+        self.panel.pack(side="bottom", fill="both", expand="no")
+
+class Top6(Toplevel):
+    def __init__(self):
+        super().__init__()
+        self.title('Кореляция между всеми столбцами данных')
+        self.geometry('500x390')
+        self.img = ImageTk.PhotoImage(Image.open("6.png"))
+        self.panel = Label(self, image=self.img)
+        self.panel.pack(side="bottom", fill="both", expand="no")
+
+class Top7(Toplevel):
+    def __init__(self):
+        super().__init__()
+        self.title('Статистические характеристики по первым семи столбцам')
+        self.geometry('900x290')
+        self.img = ImageTk.PhotoImage(Image.open("7.png"))
+        self.panel = Label(self, image=self.img)
+        self.panel.pack(side="bottom", fill="both", expand="no")
+
+#загрузка Jypyter Notebook средствами Windows
+def idat():
+    os.startfile(r'C:\Users\Марта\PycharmProjects\kursach1\mykurcach.html')
+
+#загрузка базы данных xlx средствами Windows
+def xler():
+    os.startfile(r'C:\Users\Марта\PycharmProjects\kursach1\msc_appel_data.xls')
+
+#Создание блокнота для заметок
+def bookmark():
+    #функции открытия,закрытия и сохранения файла txt
+    def quit(ev):
+        global root1
+        root1.destroy()#при нажатии кнопки выход,программа блокнота завершится
+
+    def loadfile(ev):
+        fn = filedialog.Open(root1, filetypes=[('*.txt files', '.txt')]).show()#загрузка txt файла
+        if fn == '':
+            return
+        textbox.delete('1.0', 'end')#возможность редактирования файла
+        textbox.insert('1.0', open(fn, 'rt').read())
+
+    def savefile(ev):
+        fn = filedialog.SaveAs(root1, filetypes=[('*.txt files', '.txt')]).show()#сохранение txt файла
+        if fn == '':
+            return
+        if not fn.endswith(".txt"):
+            fn += ".txt"
+        open(fn, 'wt').write(textbox.get('1.0', 'end'))#возможность редактирования файла
+
+    #создание окна пользовательского интерфейса
+    root1 = Tk()
+    root1.title ('Блокнот')
+    panelFrame = Frame(root1, height=60, bg='gray')#рабочая панель
+    textFrame = Frame(root1, height=340, width=600)#подкладка под кнопки
+
+    panelFrame.pack(side='top', fill='x')#вствка рабочей панели
+    textFrame.pack(side='bottom', fill='both', expand=1)#вствка подкладки
+
+    textbox = Text(textFrame, font='Arial 14', wrap='word')#место для текста и его редактирования
+    scrollbar = Scrollbar(textFrame)#скроллбар
+    #связка скроллбара и выгружаемого текста
+    scrollbar['command'] = textbox.yview
+    textbox['yscrollcommand'] = scrollbar.set
+
+    textbox.pack(side='left', fill='both', expand=1)#вствка рабочего пространства блокнота
+    scrollbar.pack(side='right', fill='y')#вствка скроллбара
+    # вствка кнопок
+    loadBtn = Button(panelFrame, text='Load')
+    saveBtn = Button(panelFrame, text='Save')
+    quitBtn = Button(panelFrame, text='Quit')
+    #присвоение функций кнопкам,вызов функций левой кноакой мыши
+    loadBtn.bind("<Button-1>", loadfile)
+    saveBtn.bind("<Button-1>", savefile)
+    quitBtn.bind("<Button-1>", quit)
+    # вствка кнопок
+    loadBtn.place(x=10, y=10, width=40, height=40)
+    saveBtn.place(x=60, y=10, width=40, height=40)
+    quitBtn.place(x=110, y=10, width=40, height=40)
+
+    root1.mainloop()
+#конец программы, создание пользовательского окна основной программы
+if __name__ == "__main__":
+    main = Main()
+    main.mainloop()
